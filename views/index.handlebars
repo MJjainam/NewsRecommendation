@@ -1,0 +1,16 @@
+<h2 class="page-header">Dashboard</h2>
+<p>Welcome to your dashboard</p>
+<p> asdasdas</p>
+{{!-- {{data}} --}}
+
+{{#if userList}}
+      {{#each userList}}
+      <tr>
+        {{!-- <div class="alert alert-danger">{{name}} {{isVerified}}</div> --}}
+        <th> {{username}}</th>
+        <th></th>
+        <th> {{password}} </th>
+        {{!-- {{break}} --}}
+        </tr>
+      {{/each}}
+{{/if}}
