@@ -119,14 +119,3 @@ module.exports.getNewsList = function(callback){
 
 	//res.render('user-list');
 }
-
-module.exports.getUserList = function(callback){
-	var userList = db.collection('users');
-	userList.find().toArray(function (err, users) {
-		console.log(users);
-		callback(users);
-		
-	});
-
-	//res.render('user-list');
-}

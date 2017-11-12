@@ -7,6 +7,20 @@ router.get('/', ensureAuthenticated, function(req, res){
 	res.render('index');
 });
 
+// router.get('/newsList', function (req, res) {
+// 	console.log("kakakkka");
+// 	User.getNewsList(function (newsList) {
+// 		// console.log(newsList);
+// 		res.render('user-list', { newsList: newsList });
+
+// 	});
+// 	// var userList = db.collection('users');
+// 	// userList.find().toArray(function (err, users) {
+// 	// console.log(users);
+// 	// });
+// 	// res.render('user-list');
+// });
+
 function ensureAuthenticated(req, res, next){
 	if(req.isAuthenticated()){
 		return next();

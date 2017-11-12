@@ -8,7 +8,8 @@ var crypto = require('crypto');
 var User = require('../models/user');  //model stores all the logical part. Importing 
 //functions assosiated with the user.
 
-var passwordReset = require('../models/password-reset');
+var news = require("../models/news");
+
 
 var nodemailer = require('nodemailer');
 
@@ -144,24 +145,16 @@ passport.deserializeUser(function (id, done) {
 });
 
 router.post('/login',
-	passport.authenticate('login', { successRedirect: '/', failureRedirect: '/users/login', failureFlash: true }),
+	passport.authenticate('login'  /*, { successRedirect: '/', failureRedirect: '/users/login', failureFlash: true }*/),
 	function (req, res) {
+		// console.log(req.user);
+		news.getNews(function(err,news){
+			res.render('index',  { news:news });
 
-		res.redirect('/', { name: "example" });
+		});
 		
 	}
 );
-
-// module.exports.getUserList = function(callback){
-// 	var userList = db.collection('users');
-// 	userList.find().toArray(function (err, users) {
-// 		// console.log(users);
-// 		callback(users);
-		
-// 	});
-
-// 	//res.render('user-list');
-// }
 
 
 router.get('/logout', function (req, res) {
@@ -192,7 +185,7 @@ router.get('/password-change/:token?', function (req, res) {
 	res.render('password-change');
 });
 
-router.post('/password-change/:token?', passwordReset.confirmPassword);
+// router.post('/password-change/:token?', passwordReset.confirmPassword);
 
 
 
