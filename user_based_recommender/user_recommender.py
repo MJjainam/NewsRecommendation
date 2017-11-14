@@ -1,20 +1,20 @@
 
 # coding: utf-8
 
-# In[24]:
+# In[1]:
 
 
 import csv
 from math import sqrt
 
 
-# In[25]:
+# In[2]:
 
 
 dataset = {}
 
 
-# In[26]:
+# In[3]:
 
 
 def load_data(input_name):
@@ -28,15 +28,16 @@ def load_data(input_name):
             flag = False
             continue
         row = str(line)
-        row = row.split('\t')
+        row = row.split(',')
         #print(row)
         # to remove '\n' in the end - 
-        row[2] = row[2][:-1]
+        row[3] = row[3][:-1]
         dataset.setdefault(row[0], {})
-        dataset[row[0]].setdefault(row[1], str(row[2]))
+        dataset[row[0]].setdefault(row[1], (row[2], row[3]))
+        print(row[3])
 
 
-# In[27]:
+# In[4]:
 
 
 def similarity(person1,person2):
@@ -55,20 +56,20 @@ def similarity(person1,person2):
     return similarity
 
 
-# In[28]:
+# In[7]:
 
 
-# dataset
+dataset
 
 
-# In[29]:
+# In[6]:
 
 
 load_data('testData.csv')
-similarity('jain', 'nish')
+#similarity('jain', 'nish')
 
 
-# In[30]:
+# In[8]:
 
 
 def get_category_count(person):
@@ -78,13 +79,13 @@ def get_category_count(person):
     t_category_count = 0
     total_category_count = 0
     for url in dataset[person]:
-        if dataset[person][url] == 'b':
+        if dataset[person][url][0] == 'b':
             b_category_count += 1
-        elif dataset[person][url] == 'e':
+        elif dataset[person][url][0] == 'e':
             e_category_count += 1
-        elif dataset[person][url] == 'm':
+        elif dataset[person][url][0] == 'm':
             m_category_count += 1
-        elif dataset[person][url] == 't':
+        elif dataset[person][url][0] == 't':
             t_category_count += 1
         total_category_count += 1
     return (b_category_count, e_category_count, m_category_count, t_category_count, total_category_count)
@@ -92,7 +93,7 @@ def get_category_count(person):
     
 
 
-# In[54]:
+# In[32]:
 
 
 def user_recommendations(person):
@@ -101,6 +102,7 @@ def user_recommendations(person):
     simSums = {}
     rankings_list = []
     category_count = get_category_count(person)
+    url_title = {}
     for other in dataset:
         # don't compare me to myself
         if other == person:
@@ -111,11 +113,16 @@ def user_recommendations(person):
             continue
         for url in dataset[other]:
             # only score items i haven't seen yet
-            url_category = dataset[other][url]
+            url_category = dataset[other][url][0]
+            title = dataset[other][url][1]
             #print(dataset[other][url])
             if url not in dataset[person]:     # or dataset[person][url] == 0:
                 # Similarity * score
+                #print(dataset[person][url])
+                #title = dataset[person][url][1]
                 totals.setdefault(url,0)
+                url_title.setdefault(url, "")
+                url_title[url] = title
                 # working on assigning weights - for now just assuming the similarity
                 #totals[url] += dataset[other][url]* sim
                 # 1 approach - see the category and the number of times this person has visited that category
@@ -142,6 +149,11 @@ def user_recommendations(person):
     rankings.reverse()
     # returns the recommended items
     recommendataions_list = [recommend_item for score,recommend_item in rankings]
+    final_recommendation = []
+    for item in recommendataions_list:
+        final_recommendation.append((item,url_title[item]))
+    #print(final_recommendation)
+    #print(recommendataions_list)
     if len(recommendataions_list) == 0:
         mydict = {}
         mydict['b'] = category_count[0]
@@ -150,19 +162,25 @@ def user_recommendations(person):
         mydict['t'] = category_count[3]
         print(sorted(mydict.items(), key=lambda kv: kv[1], reverse=True))
         
-    return recommendataions_list
+    return final_recommendation
 
 
-# In[55]:
+# In[36]:
 
 
 recommended_result = user_recommendations('jatin')
 
 
-# In[34]:
+# In[37]:
 
 
-dataset
+dataset['jain']['google'][1]
+
+
+# In[35]:
+
+
+recommended_result
 
 
 # In[ ]:
