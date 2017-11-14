@@ -6,8 +6,25 @@
       <tr>
         {{!-- <th> {{PUBLISHER}}</th> --}}
         {{!-- <th></th> --}}
-        <th> <a href="{{URL}}">{{TITLE}}</a> </th>
+        <th> <a id={{ID}} href="{{URL}}">{{TITLE}}  {{ID}}</a> </th>
         <br>
         </tr>
       {{/each}}
 {{/if}}
+
+<script>
+  document.onclick = function (e) {
+  e = e ||  window.event;
+  var element = e.target || e.srcElement;
+
+  if (element.tagName == 'A') {
+      console.log(element.articleID);
+     // alert(encodeURI(element.href),element.href);
+      window.location = "/news/process/" + encodeURI(element.id);
+      
+    //  window.location = "/process/"
+    //someFunction(element.href);
+    return false; // prevent default action and stop event propagation
+  }
+};
+</script>

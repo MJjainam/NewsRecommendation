@@ -148,7 +148,7 @@ router.post('/login',
 	passport.authenticate('login'  /*, { successRedirect: '/', failureRedirect: '/users/login', failureFlash: true }*/),
 	function (req, res) {
 		// console.log(req.user);
-		news.getNews(function(err,news){
+		news.getNews(req.user,function(err,news){
 			res.render('index',  { news:news });
 
 		});
