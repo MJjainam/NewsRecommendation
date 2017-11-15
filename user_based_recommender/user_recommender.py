@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[110]:
+# In[1]:
 
 
 import csv
@@ -11,13 +11,13 @@ import math
 import random
 
 
-# In[111]:
+# In[2]:
 
 
 dataset = {}
 
 
-# In[112]:
+# In[3]:
 
 
 def get_items_news_table(score_list, total):
@@ -29,7 +29,7 @@ def get_items_news_table(score_list, total):
         # 10 is set as the limit
         limit = round(number/total*10)
         client = MongoClient()
-        db = client.aiw
+        db = client.newsRecommender
         out = db.news.find({"CATEGORY":category}).limit(limit)
         for item in out:
             #print(item)
@@ -42,20 +42,20 @@ def get_items_news_table(score_list, total):
     return result
 
 
-# In[113]:
+# In[4]:
 
 
 #get_items_news_table([('t',3),('b',2),('m',0),('e',0)], 5)
 
 
-# In[114]:
+# In[5]:
 
 
 # this fetches 10 news at random - 
 def get_news_table_random(result, samples):
     #result = {}
     client = MongoClient()
-    db = client.aiw
+    db = client.newsRecommender
     total = db.news.count()
     #samples = 10
     for i in range(samples):
@@ -68,7 +68,7 @@ def get_news_table_random(result, samples):
     return result
 
 
-# In[124]:
+# In[6]:
 
 
 # def getFromClicks():
@@ -77,13 +77,13 @@ def get_news_table_random(result, samples):
 #     return db.clicks.find()
 
 
-# In[126]:
+# In[7]:
 
 
 # dataset
 
 
-# In[129]:
+# In[22]:
 
 
 def create_dataset_from_clicks():
@@ -91,11 +91,11 @@ def create_dataset_from_clicks():
     
     #res = searchInDBWithLimit(db,"category","t",1)
     client = MongoClient()
-    db = client.aiw
+    db = client.newsRecommender
     res = db.clicks.find()
     #print(res)
     for doc in res:
-        print(doc)
+        #print(doc)
         dataset.setdefault(doc['USERNAME'], {})
         dataset[doc['USERNAME']].setdefault(doc['URL'], (doc['CATEGORY'], doc['TITLE']))
         #print(doc)
@@ -117,13 +117,19 @@ def create_dataset_from_clicks():
 #         print(row[3])
 
 
-# In[130]:
+# In[23]:
 
 
 create_dataset_from_clicks()
 
 
-# In[118]:
+# In[25]:
+
+
+dataset
+
+
+# In[26]:
 
 
 def similarity(person1,person2):
@@ -142,7 +148,7 @@ def similarity(person1,person2):
     return similarity
 
 
-# In[119]:
+# In[27]:
 
 
 def get_category_count(person):
@@ -162,11 +168,9 @@ def get_category_count(person):
             t_category_count += 1
         total_category_count += 1
     return (b_category_count, e_category_count, m_category_count, t_category_count, total_category_count)
-    
-    
 
 
-# In[120]:
+# In[28]:
 
 
 # return type for this function is - {"URL":("TITLE", "CATEGORY")}
@@ -254,22 +258,21 @@ def user_recommendations(person):
         final_recommendation = get_news_table_random(final_recommendation, 10-len(final_recommendation))
     # not yet handled the recommendation length > 10
     #elif len(final_recommendation)>10:
-        
     return final_recommendation
 
 
-# In[121]:
+# In[31]:
 
 
 # run  - user_recommendations(username)
-recommended_result = user_recommendations('jatin')
+recommended_result = user_recommendations('jain')
 #recommended_result
 
 
-# In[99]:
+# In[33]:
 
 
-#dataset
+#recommended_result
 
 
 # In[101]:
