@@ -1,10 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
+var news = require("../models/news");
+
+
 // Get Homepage
 router.get('/', ensureAuthenticated, function(req, res){
 	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-	res.render('index');
+	news.getNews(req.user,function(err,news){
+		res.render('index',{news:news});
+	});
 });
 
 // router.get('/newsList', function (req, res) {

@@ -16,18 +16,6 @@
       {{/each}}
 {{/if}}
 
-{{#if userList}}
-      {{#each userList}}
-      <tr>
-        {{!-- <div class="alert alert-danger">{{name}} {{isVerified}}</div> --}}
-        <th> {{name}}</th>
-        <th></th>
-        <th> {{isVerified}} </th>
-        {{!-- {{break}} --}}
-        </tr>
-      {{/each}}
-{{/if}}
-
 
 <form method="post" action="/users/login">
   <div class="form-group">
@@ -47,3 +35,4 @@
   </div>
 
 </form>
+

@@ -66,7 +66,7 @@ module.exports.getNews = function(user,callback){
 		news = [];
 		for(key in outjs){
 			console.log(key);
-			news.push({"URL":key,"TITLE":outjs[key][0],"CATEGORY":outjs[key][1],"URL":"1"});
+			news.push({"URL":key,"TITLE":outjs[key][0],"CATEGORY":outjs[key][1],"ID":outjs[key][2]});
 		}
 		callback(null,	news);
 
@@ -74,10 +74,11 @@ module.exports.getNews = function(user,callback){
 	// News.aggregate({$sample:{size:10}}).exec(callback);
 }
 
-module.exports.storeClick = function(username,articleID){
+module.exports.storeClick = function(username,articleID,callback){
 	var query = {ID:articleID};
+	console.log("articel id is :" +articleID);
 	News.findOne(query,function(err,news){
-		// console.log(news.PUBLISHER);
+		console.log("news is here: " +news);
 		var clickJson = {
 			USERNAME:username,
 			URL:news.URL,
@@ -86,7 +87,7 @@ module.exports.storeClick = function(username,articleID){
 			ID: news.ID
 		};
 		db.collection('clicks').insert(clickJson);
-		return news.url;
+		callback(news.URL);
 	});
 
 }

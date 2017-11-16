@@ -6,19 +6,22 @@
       <tr>
         {{!-- <th> {{PUBLISHER}}</th> --}}
         {{!-- <th></th> --}}
-        <th> <a id={{ID}} href="{{URL}}">{{TITLE}}  {{ID}}</a> </th>
+        <th> <a onclick="clicked()" id="{{ID}}" href="{{URL}}">{{TITLE}}  {{ID}}  {{CATEGORY}}</a> </th>
         <br>
         </tr>
       {{/each}}
 {{/if}}
 
 <script>
+  function clicked(){
+    console.log("in clicked function");
+  }
   document.onclick = function (e) {
   e = e ||  window.event;
   var element = e.target || e.srcElement;
-
+  console.log("lkjlkjlkjljljljljljjlj");
   if (element.tagName == 'A') {
-      console.log(element.articleID);
+      console.log("element.ID " +element.id);
      // alert(encodeURI(element.href),element.href);
       window.location = "/news/process/" + encodeURI(element.id);
       

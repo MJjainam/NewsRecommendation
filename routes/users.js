@@ -148,10 +148,10 @@ router.post('/login',
 	passport.authenticate('login'  /*, { successRedirect: '/', failureRedirect: '/users/login', failureFlash: true }*/),
 	function (req, res) {
 		console.log("This is the user" +req.user);
-		news.getNews(req.user,function(err,news){
-			res.render('index',  { news:news });
+		// news.getNews(req.user,function(err,news){
+			res.redirect('/');
 
-		});
+		// });
 		
 	}
 );
@@ -163,13 +163,7 @@ router.get('/logout', function (req, res) {
 	});
 });
 
-//Confirmation
-// router.get('/confirmation/:token', User.confirmationPost);
 
-
-// router.get('/password-reset', function (req, res) {
-// res.render('password-reset');
-// });
 
 router.post('/password-reset', function (req, res) {
 	var email = req.body.email;
@@ -177,47 +171,6 @@ router.post('/password-reset', function (req, res) {
 	passwordReset.getUserByEmail(req, res, email, passwordReset.sendPasswordResetLink);
 
 });
-
-router.get('/password-change/:token?', function (req, res) {
-	console.log("in password change get");
-
-	console.log(req.params.token);
-	res.render('password-change');
-});
-
-// router.post('/password-change/:token?', passwordReset.confirmPassword);
-
-
-
-router.get('/newsList', function (req, res) {
-	console.log("kakakkka");
-	User.getNewsList(function (newsList) {
-		// console.log(newsList);
-		res.render('user-list', { newsList: newsList });
-
-	});
-	// var userList = db.collection('users');
-	// userList.find().toArray(function (err, users) {
-	// console.log(users);
-	// });
-	// res.render('user-list');
-});
-
-router.get('/list',function(req,res){
-	User.getUserList(function(userList){
-		// console.log(req);
-		// console.log(userList);
-		res.render('user-list',{userList:userList});
-		
-	});
-	// var userList = db.collection('users');
-	// userList.find().toArray(function (err, users) {
-		// console.log(users);
-	// });
-	//res.render('user-list');
-});
-
-
 
 
 

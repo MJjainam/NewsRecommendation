@@ -1,3 +1,9 @@
+
+# coding: utf-8
+
+# In[51]:
+
+
 import csv
 from math import sqrt
 from pymongo import MongoClient
@@ -6,7 +12,15 @@ import random
 import sys
 import json
 
+
+# In[52]:
+
+
 dataset = {}
+
+
+# In[53]:
+
 
 def get_items_news_table(score_list, total):
     result = {}
@@ -25,9 +39,19 @@ def get_items_news_table(score_list, total):
                 break
             result.setdefault(item['URL'], ())
             #result[item['URL']].setdefault(item['TITLE'])
-            result[item['URL']] = (item['TITLE'], item['CATEGORY'])
+            result[item['URL']] = (item['TITLE'], item['CATEGORY'], item['ID'])
             count += 1
     return result
+
+
+# In[54]:
+
+
+#get_items_news_table([('t',3),('b',2),('m',0),('e',0)], 5)
+
+
+# In[55]:
+
 
 # this fetches 10 news at random -
 def get_news_table_random(result, samples):
@@ -39,11 +63,30 @@ def get_news_table_random(result, samples):
     for i in range(samples):
         random_num = math.floor(random.random()*total)
         doc = db.news.find().skip(random_num).limit(1).next()
-        result[doc['URL']] = (doc['TITLE'], doc['CATEGORY'])
+        result[doc['URL']] = (doc['TITLE'], doc['CATEGORY'], doc['ID'])
         #result.setdefault(doc['URL'], ())
         #result[doc['URL']] = (doc['TITLE'], doc['CATEGORY'])
 
     return result
+
+
+# In[56]:
+
+
+# def getFromClicks():
+#     client = MongoClient()
+#     db = client.aiw
+#     return db.clicks.find()
+
+
+# In[57]:
+
+
+# dataset
+
+
+# In[58]:
+
 
 def create_dataset_from_clicks():
     global dataset
@@ -56,15 +99,53 @@ def create_dataset_from_clicks():
     for doc in res:
         #print(doc)
         dataset.setdefault(doc['USERNAME'], {})
-        dataset[doc['USERNAME']].setdefault(doc['URL'], (doc['CATEGORY'], doc['TITLE']))
+        dataset[doc['USERNAME']].setdefault(doc['URL'], (doc['CATEGORY'], doc['TITLE'], doc['ID']))
+        #print(doc)
+    #print(dataset)
+#     input_file = open(input_name, 'rU')
+#     flag = True
+#     for line in input_file:
+#         # executing flag for the first time to eliminate the first row that tells the column names in CSV file
+#         if flag==True:
+#             flag = False
+#             continue
+#         row = str(line)
+#         row = row.split(',')
+#         #print(row)
+#         # to remove '\n' in the end -
+#         row[3] = row[3][:-1]
+#         dataset.setdefault(row[0], {})
+#         dataset[row[0]].setdefault(row[1], (row[2], row[3]))
+#         print(row[3])
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[59]:
+
 
 def similarity(person1,person2):
     # To get both rated items
-    both_person_category = {}
+    #both_person_category = {}
+    number_of_common_category = 0
     for url in dataset[person1]:
-        if url in dataset[person2]:
-            both_person_category[url] = 1
-    number_of_common_category = len(both_person_category)
+        c1 = dataset[person1][url][0]
+        for keys in dataset[person2].keys():
+            c2 = dataset[person2][keys][0]
+            if c1 == c2:
+                number_of_common_category += 1
+                #both_person_category[url] = 1
+    #number_of_common_category = len(both_person_category)
     # Checking for number of ratings in common
     if number_of_common_category == 0:
         return 0
@@ -72,6 +153,16 @@ def similarity(person1,person2):
     total_count = len(dataset[person1]) + len(dataset[person2]) - number_of_common_category
     similarity = number_of_common_category / total_count
     return similarity
+
+
+# In[ ]:
+
+
+
+
+
+# In[61]:
+
 
 def get_category_count(person):
     b_category_count = 0
@@ -90,6 +181,10 @@ def get_category_count(person):
             t_category_count += 1
         total_category_count += 1
     return (b_category_count, e_category_count, m_category_count, t_category_count, total_category_count)
+
+
+# In[62]:
+
 
 # return type for this function is - {"URL":("TITLE", "CATEGORY")}
 def user_recommendations(person):
@@ -178,10 +273,11 @@ def user_recommendations(person):
     #elif len(final_recommendation)>10:
     return final_recommendation
 
+
+# In[63]:
+
+
 # run  - user_recommendations(username)
 if __name__=="__main__":
     username_input = sys.argv[1]
-    jsonDumps = json.dumps(user_recommendations(username_input))
-    print(jsonDumps)
-    #print(user_recommendations(username_input))
-
+    print(json.dumps(user_recommendations(username_input)))
