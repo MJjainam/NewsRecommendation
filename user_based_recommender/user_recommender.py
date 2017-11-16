@@ -1,24 +1,11 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
 import csv
 from math import sqrt
 from pymongo import MongoClient
 import math
 import random
-
-
-# In[2]:
-
+import sys
 
 dataset = {}
-
-
-# In[3]:
-
 
 def get_items_news_table(score_list, total):
     result = {}
@@ -41,17 +28,7 @@ def get_items_news_table(score_list, total):
             count += 1
     return result
 
-
-# In[4]:
-
-
-#get_items_news_table([('t',3),('b',2),('m',0),('e',0)], 5)
-
-
-# In[5]:
-
-
-# this fetches 10 news at random - 
+# this fetches 10 news at random -
 def get_news_table_random(result, samples):
     #result = {}
     client = MongoClient()
@@ -67,28 +44,9 @@ def get_news_table_random(result, samples):
 
     return result
 
-
-# In[6]:
-
-
-# def getFromClicks():
-#     client = MongoClient()
-#     db = client.aiw
-#     return db.clicks.find()
-
-
-# In[7]:
-
-
-# dataset
-
-
-# In[22]:
-
-
 def create_dataset_from_clicks():
     global dataset
-    
+
     #res = searchInDBWithLimit(db,"category","t",1)
     client = MongoClient()
     db = client.newsRecommender
@@ -98,39 +56,6 @@ def create_dataset_from_clicks():
         #print(doc)
         dataset.setdefault(doc['USERNAME'], {})
         dataset[doc['USERNAME']].setdefault(doc['URL'], (doc['CATEGORY'], doc['TITLE']))
-        #print(doc)
-    #print(dataset)
-#     input_file = open(input_name, 'rU')
-#     flag = True
-#     for line in input_file:
-#         # executing flag for the first time to eliminate the first row that tells the column names in CSV file
-#         if flag==True:
-#             flag = False
-#             continue
-#         row = str(line)
-#         row = row.split(',')
-#         #print(row)
-#         # to remove '\n' in the end - 
-#         row[3] = row[3][:-1]
-#         dataset.setdefault(row[0], {})
-#         dataset[row[0]].setdefault(row[1], (row[2], row[3]))
-#         print(row[3])
-
-
-# In[23]:
-
-
-create_dataset_from_clicks()
-
-
-# In[25]:
-
-
-dataset
-
-
-# In[26]:
-
 
 def similarity(person1,person2):
     # To get both rated items
@@ -146,10 +71,6 @@ def similarity(person1,person2):
     total_count = len(dataset[person1]) + len(dataset[person2]) - number_of_common_category
     similarity = number_of_common_category / total_count
     return similarity
-
-
-# In[27]:
-
 
 def get_category_count(person):
     b_category_count = 0
@@ -169,18 +90,14 @@ def get_category_count(person):
         total_category_count += 1
     return (b_category_count, e_category_count, m_category_count, t_category_count, total_category_count)
 
-
-# In[28]:
-
-
 # return type for this function is - {"URL":("TITLE", "CATEGORY")}
 def user_recommendations(person):
     global dataset
-    
+
     final_recommendation = {}
-    
+
     create_dataset_from_clicks()
-    # if the person has not yet clicked anything yet, choose 10 news at random 
+    # if the person has not yet clicked anything yet, choose 10 news at random
     if dataset.get(person) == None:
         final_recommendation = get_news_table_random(final_recommendation, 10)
         return final_recommendation
@@ -215,9 +132,9 @@ def user_recommendations(person):
                 # 1 approach - see the category and the number of times this person has visited that category
                 result = 1
                 denominator = (category_count[4] + 4)
-                # applied laplace smoothing techniques - 
+                # applied laplace smoothing techniques -
                 if url_category == 'b':
-                    result = (category_count[0] + 1) / denominator 
+                    result = (category_count[0] + 1) / denominator
                 elif url_category == 'e':
                     result = (category_count[1] + 1) / denominator
                 elif url_category == 'm':
@@ -236,7 +153,7 @@ def user_recommendations(person):
     rankings.reverse()
     # returns the recommended items
     recommendataions_list = [recommend_item for score,recommend_item in rankings]
-    
+
     count = 0
     for item in recommendataions_list:
         # get only top-10 recommendations
@@ -260,29 +177,7 @@ def user_recommendations(person):
     #elif len(final_recommendation)>10:
     return final_recommendation
 
-
-# In[31]:
-
-
 # run  - user_recommendations(username)
-recommended_result = user_recommendations('jain')
-#recommended_result
-
-
-# In[33]:
-
-
-#recommended_result
-
-
-# In[101]:
-
-
-#recommended_result
-
-
-# In[ ]:
-
-
-
-
+if __name__=="__main__":
+    username_input = sys.argv[1]
+    print(user_recommendations(username_input))
