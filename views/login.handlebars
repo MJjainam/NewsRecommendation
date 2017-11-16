@@ -5,7 +5,16 @@
         {{!-- {{break}} --}}
       {{/each}}
 {{/if}}
-
+{{#if news}}
+      {{#each news}}
+      <tr>
+        {{!-- <th> {{PUBLISHER}}</th> --}}
+        {{!-- <th></th> --}}
+        <th> <a id={{ID}} href="{{URL}}">{{TITLE}}  {{ID}}</a> </th>
+        <br>
+        </tr>
+      {{/each}}
+{{/if}}
 
 {{#if userList}}
       {{#each userList}}

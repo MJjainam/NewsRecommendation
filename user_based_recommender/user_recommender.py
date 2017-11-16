@@ -4,6 +4,7 @@ from pymongo import MongoClient
 import math
 import random
 import sys
+import json
 
 dataset = {}
 
@@ -180,4 +181,7 @@ def user_recommendations(person):
 # run  - user_recommendations(username)
 if __name__=="__main__":
     username_input = sys.argv[1]
-    print(user_recommendations(username_input))
+    jsonDumps = json.dumps(user_recommendations(username_input))
+    print(jsonDumps)
+    #print(user_recommendations(username_input))
+

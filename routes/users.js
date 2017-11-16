@@ -147,7 +147,7 @@ passport.deserializeUser(function (id, done) {
 router.post('/login',
 	passport.authenticate('login'  /*, { successRedirect: '/', failureRedirect: '/users/login', failureFlash: true }*/),
 	function (req, res) {
-		// console.log(req.user);
+		console.log("This is the user" +req.user);
 		news.getNews(req.user,function(err,news){
 			res.render('index',  { news:news });
 
