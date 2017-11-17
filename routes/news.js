@@ -14,7 +14,7 @@ router.get("/process/:articleID?",function(req,res){
     news.storeClick(req.user.username,req.params.articleID,function(url){
         console.log("inside anonymous function of storeClick");
         console.log("see here now: " +url);
-        res.redirect(url);
+        // res.redirect(url);
     });
     // res.redirect("index");
 });

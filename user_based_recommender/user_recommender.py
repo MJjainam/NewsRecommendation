@@ -29,13 +29,13 @@ def get_items_news_table(score_list, total):
         category = tup[0]
         number = tup[1]
         # 10 is set as the limit
-        limit = round(number/total*10)
+        limit = round(number/total*6)
         client = MongoClient()
         db = client.newsRecommender
         out = db.news.find({"CATEGORY":category}).limit(limit)
         for item in out:
             #print(item)
-            if count>=10:
+            if count>=6:
                 break
             result.setdefault(item['URL'], ())
             #result[item['URL']].setdefault(item['TITLE'])
